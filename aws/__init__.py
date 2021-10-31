@@ -1,3 +1,0 @@
-
-class AWSError(Exception):
-    pass
