@@ -15,8 +15,8 @@ import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import tensorflow.keras as k
-from aws import AWSError
-from aws.manage_instance import stop_this_instance, should_spot_terminate
+# from aws import AWSError
+# from aws.manage_instance import stop_this_instance, should_spot_terminate
 
 __author__ = 'arbellea@post.bgu.ac.il'
 
@@ -301,7 +301,6 @@ def train(params):
                                 val_tra_sequence)
                         except tf.errors.OutOfRangeError:
                             break
-
 
                     else:
                         val_tra_sequence = val_tra_pred = None
