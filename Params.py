@@ -15,7 +15,7 @@ class ParamsBase(object):
     aws = False
     input_depth = 0
     add_tra_output = True
-    send_email = True
+    send_email = False
     email_username = ' '
     email_password = " "
     receiver_email = ' '
@@ -46,11 +46,6 @@ class CTCParams(ParamsBase):
     root_data_dir = ROOT_DATA_DIR
     train_sequence_list = [('Fluo-C2DL-Huh7', '{:02d}'.format(s)) for s in range(1, 3)]
     val_sequence_list = [('Fluo-C2DL-Huh7', '{:02d}'.format(s)) for s in range(1, 3)]
-
-
-    # for Tal Jap Cells:
-    # train_sequence_list = [('train', '{:02d}'.format(s)) for s in range(1, 5)]
-    # val_sequence_list = [('valid', '{:02d}'.format(s)) for s in [5]]
 
     add_tra_output = True
     sigmoid_output = False
