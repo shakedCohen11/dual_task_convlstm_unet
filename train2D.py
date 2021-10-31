@@ -52,11 +52,9 @@ def train(params):
             if params.sigmoid_output:
                 bce = tf.nn.sigmoid_cross_entropy_with_logits
             else:
-                # wbce = losses.WeightedCELossTra(params.channel_axis + 1, params.marker_weights, 2)
                 wbce = losses.WeightedCELoss(params.channel_axis + 1, params.marker_weights, 2)
 
         seg_measure = losses.seg_measure(params.channel_axis + 1, three_d=False)
-        # TODO add separate loss
         train_loss = k.metrics.Mean(name='train_loss')
         train_ce_loss = k.metrics.Mean(name='train_ce_loss')
         train_bce_loss = k.metrics.Mean(name='train_bce_loss')
@@ -243,9 +241,9 @@ def train(params):
                                 fobj, protocol=pickle.HIGHEST_PROTOCOL)
                 log_print('Saved Model to file: {}'.format(model_fname))
             while ckpt.step < params.num_iterations:
-                if params.aws:
-                    if should_spot_terminate():
-                        raise AWSError('Quitting Spot Instance Gracefully')
+                # if params.aws:
+                #     if should_spot_terminate():
+                #         raise AWSError('Quitting Spot Instance Gracefully')
                 try:
                     (train_output_sequence, train_predictions, train_loss_value, image_sequence,
                      seg_sequence, train_tra_input, train_tra_pred) = train_n(train_data_provider, model)
@@ -333,15 +331,15 @@ def train(params):
                 coord.raise_requested_exception()
             stop_spot_instance = True
 
-        except AWSError as err:
-            if not params.dry_run:
-                log_print('Saving Model Before closing due to error: {}'.format(str(err)))
-                save_path = manager.save(int(ckpt.step))
-                log_print("Saved checkpoint for step {}: {}".format(int(ckpt.step), save_path))
-                # raise err
-            end_on_err = True
-            err_mesg = 'AWS spot shutdown'
-            stop_spot_instance = False
+        # except AWSError as err:
+        #     if not params.dry_run:
+        #         log_print('Saving Model Before closing due to error: {}'.format(str(err)))
+        #         save_path = manager.save(int(ckpt.step))
+        #         log_print("Saved checkpoint for step {}: {}".format(int(ckpt.step), save_path))
+        #         # raise err
+        #     end_on_err = True
+        #     err_mesg = 'AWS spot shutdown'
+        #     stop_spot_instance = False
         except KeyboardInterrupt as err:
 
             if not params.dry_run:
@@ -384,10 +382,10 @@ def train(params):
             finally:
                 log_print('Done')
                 print(stop_spot_instance)
-                if params.aws and stop_spot_instance:
-                    stop_this_instance()
-                    if err is not None:
-                        raise err
+                # if params.aws and stop_spot_instance:
+                #     stop_this_instance()
+                #     if err is not None:
+                #         raise err
 
 
 def send_mail(sender_email, password, receiver_email, run_path, send_err=True, err_msg=''):
@@ -548,7 +546,6 @@ if __name__ == '__main__':
     arg_parser.add_argument('--dist_loss', dest='dist_loss', action='store_const', const=True,
                             help="new distance loss for markers")
     sys_args = sys.argv
-
 
     input_args = arg_parser.parse_args()
     args_dict = {key: val for key, val in vars(input_args).items() if not (val is None)}
