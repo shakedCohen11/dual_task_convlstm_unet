@@ -1,91 +1,99 @@
-# Lstm-Unet
+# LSTM-UNet
+
+The code in this repository is suplamentary to our paper "Microscopy Cell Segmentation via Convolutional LSTM Networks" published in ISBI 2019.
+If this code is used please cite the paper:
+
+@article{arbelleIsbi2019,
+  title={Microscopy cell segmentation via convolutional LSTM networks},
+  author={Arbelle, Assaf and Raviv, Tammy Riklin},
+  booktitle={2019 IEEE 16th International Symposium on Biomedical Imaging (ISBI 2019)},
+  pages={1008--1012},
+  year={2019},
+  organization={IEEE}
+}
+
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+### Prerequisites
 
 
+This project is writen in Python 3 and makes use of tensorflow 2.0.0a0. 
+Please see the requierments.txt file for all prerequisits. 
 
-## Getting started
+### Installing
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+In order to get the code, either clone the project, or download a zip from GitHub:
+```
+git clone https://github.com/arbellea/LSTM-UNet.git
+```
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+Install all python requierments
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/shaked0/lstmUnet.git
-git branch -M main
-git push -uf origin main
+pip3 install -r <PATH TO REPOSITORY>/requirements.txt 
 ```
 
-## Integrate with your tools
+This should do it!
+### Data
 
-- [ ] [Set up project integrations](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/user/project/integrations/)
+The training script was tailored for the Cell Tracking Benchmarck
+If you do not have the training data and wish to train on the challenge data please contact the organizers through the website: www.celltrackingchallenge.net
+Once you have the data, untar the file metadata_file.tar.gz into the direcroty of the training data: 
 
-## Collaborate with your team
+```
+cd <PATH TO CELLTRACKINGCHALLENGE DATA>/Training
+tar -xzvf  <PATH TO REPOSITORY>/metadata_files.tar.gz
+```
+make sure that metadata_01.pickle and metadata_02.pickle are located in each dataset directory (Only of 2D datasets)
+## Training
+### Modify Parameters
 
-- [ ] [Invite team members and collaborators](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Automatically merge when pipeline succeeds](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Open the Params.py file and change the paths for ROOT_DATA_DIR and ROOT_SAVE_DIR. 
+ROOT_DATA_DIR should point to the directory of the cell tracking challenge training data: <PATH TO CELLTRACKINGCHALLENGE DATA>/Training and ROOT_SAVE_DIR should point to whichever directory you would like to save the checkpoints and tensorboard logs.
 
-## Test and Deploy
+  
 
-Use the built-in continuous integration in GitLab.
+### Run Training Script:
+In order to set the parameters for training you could either change the parameters if Params.py file under class CTCParams
+or input them through command line.
+You are encourged to go over the parameters in CTCParams to see the avialable options
+The training script is train2D.py
 
-- [ ] [Get started with GitLab CI/CD](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://docs.gitlab.com/ee/user/clusters/agent/)
+```
+python3 train2D.py
+```
+### Training on Private Data:
+Since there are many formats for data and many was to store annotations, we could note come up with a generic data reader.
+So if one would like to train on private data we recommend one of the following:
+1. Save the data in the format of the cell tracking challenge and create the corresponding metadata_<sequenceNumber>.pickle file. 
+2. Write you own Data reader with similar api to ours. See the data reader in DataHandling.py
 
-***
+## Inference 
+### Modify Parameters
 
-# Editing this README
+Open the Params.py file and change the paths for ROOT_TEST_DATA_DIR. 
+ROOT_TEST_DATA_DIR should point to the directory of the cell tracking challenge training data: <PATH TO CELLTRACKINGCHALLENGE DATA>/Test.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://gitlab.com/-/experiment/new_project_readme_content:977efa9c593d1be8aa5cd9a8364b49ab?https://www.makeareadme.com/) for this template.
+### Download Pre-trained models for Cell Segmentation Benchmark
+If you would like to run the pretrained models for the cell segmentation benchmark datasets, you could download the models from:
+https://drive.google.com/file/d/1uQOdelJoXrffmW_1OCu417nHKtQcH3DJ/view?usp=sharing
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### Run Inference Script:
+In order to set the parameters for training you could either change the parameters if Params.py file under class CTCInferenceParams
+or input them through command line.
+You are encourged to go over the parameters in CTCInferenceParams to see the avialable options
+The training script is train2D.py
 
-## Name
-Choose a self-explaining name for your project.
+```
+python3 Inference2D.py
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## Authors
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
+Assaf Arbelle (arbellea@post.bgu.ac.il), Shaked Cohen (shaked0@post.bgu.ac.il) and Tammy Riklin Raviv (rrtammy@ee.bgu.ac.il)
+Ben Gurion University of the Negev
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
-
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
