@@ -26,7 +26,7 @@ Please see the requierments.txt file for all prerequisits.
 
 In order to get the code, either clone the project, or download a zip from GitHub:
 ```
-git clone https://github.com/arbellea/LSTM-UNet.git
+git clone https://gitlab.com/shaked0/lstmUnet.git
 ```
 
 Install all python requierments
