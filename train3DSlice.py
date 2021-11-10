@@ -124,11 +124,4 @@ if __name__ == '__main__':
     args_dict = {key: val for key, val in vars(input_args).items() if not (val is None)}
     print(args_dict)
     params_obj = Params.CTCParams3DSlice(args_dict)
-    # params = Params.CTCParams(args_dict)
-    # params = Params.CTCParamsNoLSTM(args_dict)
-
-    # try:
-    #     train()
-    # finally:
-    #     log_print('Done')
     train(params_obj)
