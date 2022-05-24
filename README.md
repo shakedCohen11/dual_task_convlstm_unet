@@ -40,7 +40,7 @@ cd <PATH TO CELLTRACKINGCHALLENGE DATA>/Training
 tar -xzvf  <PATH TO REPOSITORY>/metadata_files.tar.gz
 ```
 #### Create Metadata File 
-Create your using dataset metadata files using the create_sequence_metadata.py script.
+Create your dataset metadata files using the create_sequence_metadata.py script.
 Make sure that metadata_01.pickle and metadata_02.pickle are located in each dataset directory (Only of 2D datasets)
 
 ## Training
