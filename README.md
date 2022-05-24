@@ -1,16 +1,9 @@
 # LSTM-UNet
 
-The code in this repository is suplamentary to our paper "Microscopy Cell Segmentation via Convolutional LSTM Networks" published in ISBI 2019.
+The code in this repository is suplamentary to our paper "Dual-Task ConvLSTM-UNet for Instance Segmentation of Weakly Annotated Microscopy Videos" published in IEEE Transactions on Medical Imaging (Early Access).
 If this code is used please cite the paper:
 
-@article{arbelleIsbi2019,
-  title={Microscopy cell segmentation via convolutional LSTM networks},
-  author={Arbelle, Assaf and Raviv, Tammy Riklin},
-  booktitle={2019 IEEE 16th International Symposium on Biomedical Imaging (ISBI 2019)},
-  pages={1008--1012},
-  year={2019},
-  organization={IEEE}
-}
+@ARTICLE{9717246,  author={Arbelle, Assaf and Cohen, Shaked and Raviv, Tammy Riklin},  journal={IEEE Transactions on Medical Imaging},   title={Dual-Task ConvLSTM-UNet for Instance Segmentation of Weakly Annotated Microscopy Videos},   year={2022},  volume={},  number={},  pages={1-1},  doi={10.1109/TMI.2022.3152927}}
 
 ## Getting Started
 
@@ -37,7 +30,7 @@ pip3 install -r <PATH TO REPOSITORY>/requirements.txt
 
 This should do it!
 ### Data
-
+#### Get The Data
 The training script was tailored for the Cell Tracking Benchmarck
 If you do not have the training data and wish to train on the challenge data please contact the organizers through the website: www.celltrackingchallenge.net
 Once you have the data, untar the file metadata_file.tar.gz into the direcroty of the training data: 
@@ -46,7 +39,10 @@ Once you have the data, untar the file metadata_file.tar.gz into the direcroty o
 cd <PATH TO CELLTRACKINGCHALLENGE DATA>/Training
 tar -xzvf  <PATH TO REPOSITORY>/metadata_files.tar.gz
 ```
-make sure that metadata_01.pickle and metadata_02.pickle are located in each dataset directory (Only of 2D datasets)
+#### Create Metadata File 
+Create your using dataset metadata files using the create_sequence_metadata.py script.
+Make sure that metadata_01.pickle and metadata_02.pickle are located in each dataset directory (Only of 2D datasets)
+
 ## Training
 ### Modify Parameters
 
@@ -78,7 +74,8 @@ ROOT_TEST_DATA_DIR should point to the directory of the cell tracking challenge 
 
 ### Download Pre-trained models for Cell Segmentation Benchmark
 If you would like to run the pretrained models for the cell segmentation benchmark datasets, you could download the models from:
-https://drive.google.com/file/d/1uQOdelJoXrffmW_1OCu417nHKtQcH3DJ/view?usp=sharing
+
+
 
 ### Run Inference Script:
 In order to set the parameters for training you could either change the parameters if Params.py file under class CTCInferenceParams
